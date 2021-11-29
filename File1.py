@@ -1,5 +1,6 @@
 import requests
 from collections.abc import Iterator
+
 url = 'https://pokeapi.co/api/v2/pokemon/132'
 
 
@@ -8,6 +9,9 @@ class BasePokemon:
         self._name = abobus['name']
 
     def __str__(self):
+        return f'name {self._name}'
+
+    def __repr__(self):
         return f'name {self._name}'
 
 
@@ -25,7 +29,13 @@ class Pokemon(BasePokemon):
                f'height {self.__height} ' \
                f'weight {self.__weight} '
 
-    def get_stats(self, stats:str):
+    def __repr__(self):
+        return f'id {self.__id} ' \
+               f'name {self._name} ' \
+               f'height {self.__height} ' \
+               f'weight {self.__weight} '
+
+    def get_stats(self, stats: str):
         if stats == 'id':
             return self.__id
         elif stats == 'name':
@@ -41,17 +51,19 @@ class Pokemon(BasePokemon):
                    f'weight {self.__weight} '
         raise ValueError
 
+
 class PokemonAPI:
     @staticmethod
-    def get_pokemon(argument) -> Iterator:
+    def get_pokemon(argument):
         url_1 = f'https://pokeapi.co/api/v2/pokemon/{argument}'
         bibus = requests.get(url_1).json()
-        yield Pokemon(bibus)
+        return Pokemon(bibus)
 
     @staticmethod
-    def get_all(get_full = False) -> Iterator:
+    def get_all(get_full: bool = False) -> Iterator:
         number = 1
-        if get_full == False:
+        if not get_full:
+            number = 1
             while number < 51:
                 print(number)
                 url_2 = f'https://pokeapi.co/api/v2/pokemon/{number}'
@@ -60,28 +72,20 @@ class PokemonAPI:
                 number += 1
 
         else:
-            while number < 50:
-                PokemonAPI.get_pokemon(number)
+            while number < 51:
+                #print('все должно работать', number)
+                yield PokemonAPI.get_pokemon(number)
                 number += 1
-
-
-
-
-
-
-
-
-
-
-
 
 
 abobus = requests.get(url).json()
 ditto = Pokemon(abobus)
-print(ditto.get_stats('id'))
-print(ditto)
+# print(ditto.get_stats('id'))
+# print(ditto)
 a = PokemonAPI()
-print(a.get_pokemon(11))
+# print(next(a.get_pokemon(11)))
+
+b = PokemonAPI.get_all(True)
 while True:
-    print(next(a.get_all(False)))
-#PokemonAPI.get_pokemon(132)
+    print(next(b))
+# print(next(PokemonAPI.get_pokemon(5)))
