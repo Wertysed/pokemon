@@ -1,6 +1,6 @@
 import requests
-
-url = 'https://pokeapi.co/api/v2/pokemon/ditto'
+from collections.abc import Iterator
+url = 'https://pokeapi.co/api/v2/pokemon/132'
 
 
 class BasePokemon:
@@ -41,8 +41,47 @@ class Pokemon(BasePokemon):
                    f'weight {self.__weight} '
         raise ValueError
 
+class PokemonAPI:
+    @staticmethod
+    def get_pokemon(argument) -> Iterator:
+        url_1 = f'https://pokeapi.co/api/v2/pokemon/{argument}'
+        bibus = requests.get(url_1).json()
+        yield Pokemon(bibus)
+
+    @staticmethod
+    def get_all(get_full = False) -> Iterator:
+        number = 1
+        if get_full == False:
+            while number < 51:
+                print(number)
+                url_2 = f'https://pokeapi.co/api/v2/pokemon/{number}'
+                bibus_1 = requests.get(url_2).json()
+                yield BasePokemon(bibus_1)
+                number += 1
+
+        else:
+            while number < 50:
+                PokemonAPI.get_pokemon(number)
+                number += 1
+
+
+
+
+
+
+
+
+
+
+
+
 
 abobus = requests.get(url).json()
 ditto = Pokemon(abobus)
 print(ditto.get_stats('id'))
 print(ditto)
+a = PokemonAPI()
+print(a.get_pokemon(11))
+while True:
+    print(next(a.get_all(False)))
+#PokemonAPI.get_pokemon(132)
