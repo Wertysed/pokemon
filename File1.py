@@ -23,6 +23,10 @@ class Pokemon(BasePokemon):
         self.__height = abobus['height']
         self.__weight = abobus['weight']
 
+    def __gt__(self, other):
+        return self.__weight > other.__weight
+
+
     def __str__(self):
         return f'id {self.__id} ' \
                f'name {self._name} ' \
@@ -72,7 +76,7 @@ class PokemonAPI:
                 number += 1
 
         else:
-            while number < 51:
+            while number < 50:
                 #print('все должно работать', number)
                 yield PokemonAPI.get_pokemon(number)
                 number += 1
@@ -80,12 +84,13 @@ class PokemonAPI:
 
 abobus = requests.get(url).json()
 ditto = Pokemon(abobus)
-# print(ditto.get_stats('id'))
-# print(ditto)
-a = PokemonAPI()
-# print(next(a.get_pokemon(11)))
+print(ditto)
+c = PokemonAPI.get_pokemon(1)
+for i in range(51):
+    p = PokemonAPI.get_pokemon(i + 2)
+    if c > p:
+        c = c
+    else:
+        c = p
+print('самый большой', c)
 
-b = PokemonAPI.get_all(True)
-while True:
-    print(next(b))
-# print(next(PokemonAPI.get_pokemon(5)))
