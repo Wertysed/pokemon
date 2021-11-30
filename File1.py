@@ -127,6 +127,6 @@ print('самый большой', c)
 # g = PokemonAPI.get_all(1231)
 # while True:
 #    print(next(g))
-
+#
 print("реализация исключения")
 f = PokemonAPI.get_pokemon(78.33)
