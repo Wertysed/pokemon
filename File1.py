@@ -3,8 +3,13 @@ from collections.abc import Iterator
 from typing import Union
 from typing import Any
 from dataclasses import dataclass
+from functools import lru_cache
+
+
 
 url = 'https://pokeapi.co/api/v2/pokemon/132'
+
+url_stats = 'https://pokeapi.co/api/v2/stat/132'
 
 
 class PokeError(Exception):
@@ -71,9 +76,14 @@ class Pokemon(BasePokemon):
         raise PokeError('introduced something incorrect')
 
 
+class PokemonStats:
+    pass
+
+
 class PokemonAPI:
 
     @staticmethod
+    @lru_cache
     def get_pokemon(argument: Union[int, str]):
 
         if not isinstance(argument, (int, str)):
@@ -110,6 +120,7 @@ class PokemonAPI:
             print('Some pasta')
 
 
+#abobus = requests.get(url_stats).json()
 abobus = requests.get(url).json()
 ditto = Pokemon(abobus)
 print('Задание №1')
@@ -123,7 +134,17 @@ for i in range(51):
     else:
         c = p
 print('самый большой', c)
+print('без кеширования', PokemonAPI.get_pokemon.cache_info())
+c = PokemonAPI.get_pokemon(1)
+for i in range(51):
+    p = PokemonAPI.get_pokemon(i + 2)
+    if c > p:
+        c = c
+    else:
+        c = p
 
+print('самый большой', c)
+print('c кешированием', PokemonAPI.get_pokemon.cache_info())
 # g = PokemonAPI.get_all(1231)
 # while True:
 #    print(next(g))
