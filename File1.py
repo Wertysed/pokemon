@@ -2,6 +2,7 @@ import requests
 from collections.abc import Iterator
 from typing import Union
 from typing import Any
+from dataclasses import dataclass
 
 url = 'https://pokeapi.co/api/v2/pokemon/132'
 
@@ -10,8 +11,12 @@ class PokeError(Exception):
     pass
 
 
+@dataclass
 class BasePokemon:
-    def __init__(self, abobus):
+    abobus: Any
+    name: str
+
+    def __init__(self, abobus: Any):
         self._name = abobus['name']
 
     def __str__(self):
@@ -21,7 +26,12 @@ class BasePokemon:
         return f'name {self._name}'
 
 
+@dataclass
 class Pokemon(BasePokemon):
+    __id: str
+    __height: int
+    __weight: int
+
     def __init__(self, abobus: Any):
         BasePokemon.__init__(self, abobus)
         self.__id = abobus['id']
@@ -114,8 +124,8 @@ for i in range(51):
         c = p
 print('самый большой', c)
 
-#g = PokemonAPI.get_all(1231)
-#while True:
+# g = PokemonAPI.get_all(1231)
+# while True:
 #    print(next(g))
 
 print("реализация исключения")
