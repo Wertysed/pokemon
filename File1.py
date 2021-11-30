@@ -134,7 +134,7 @@ for i in range(51):
     else:
         c = p
 print('самый большой', c)
-print('без кеширования', PokemonAPI.get_pokemon.cache_info())
+print('до кеширования', PokemonAPI.get_pokemon.cache_info())
 c = PokemonAPI.get_pokemon(1)
 for i in range(51):
     p = PokemonAPI.get_pokemon(i + 2)
